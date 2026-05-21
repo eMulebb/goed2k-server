@@ -151,9 +151,9 @@ func (c *prependConn) Read(p []byte) (int, error) {
 
 // serverObfuscatedHandshake runs the server-side DH + RC4 handshake (aMule-compatible).
 func serverObfuscatedHandshake(conn net.Conn, firstByte byte) (net.Conn, error) {
+	_ = firstByte
 	gaBuf := make([]byte, 96)
-	gaBuf[0] = firstByte
-	if _, err := io.ReadFull(conn, gaBuf[1:]); err != nil {
+	if _, err := io.ReadFull(conn, gaBuf); err != nil {
 		return nil, err
 	}
 	padLenBuf := make([]byte, 1)

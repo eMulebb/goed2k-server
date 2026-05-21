@@ -11,7 +11,7 @@ import (
 	"github.com/monkeyWie/goed2k/protocol"
 )
 
-func TestServerObfuscatedHandshakeKeepsPeekedDHPrefixByte(t *testing.T) {
+func TestServerObfuscatedHandshakeIgnoresPeekedMarkerBeforeDH(t *testing.T) {
 	serverSide, clientSide := net.Pipe()
 	defer clientSide.Close()
 
@@ -28,11 +28,11 @@ func TestServerObfuscatedHandshakeKeepsPeekedDHPrefixByte(t *testing.T) {
 	}
 	results := make(chan handshakeResult, 1)
 	go func() {
-		conn, err := serverObfuscatedHandshake(serverSide, gaBuf[0])
+		conn, err := serverObfuscatedHandshake(serverSide, 0x42)
 		results <- handshakeResult{conn: conn, err: err}
 	}()
 
-	clientReadRC4, clientWriteRC4 := runClientObfuscationHandshake(t, clientSide, clientPrivate, gaBuf[1:])
+	clientReadRC4, clientWriteRC4 := runClientObfuscationHandshake(t, clientSide, clientPrivate, gaBuf)
 	writeEncryptedClientFrame(t, clientSide, clientWriteRC4, opGetServerList, nil)
 	readAndDecryptServerFinalHandshake(t, clientSide, clientReadRC4)
 
