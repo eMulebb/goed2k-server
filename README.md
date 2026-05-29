@@ -1,7 +1,5 @@
 # goed2k-server
 
-[简体中文](README-CN.md)
-
 `github.com/chenjia404/goed2k-server` is an ED2K/eMule server implemented in Go, compatible with the `github.com/monkeyWie/goed2k` client protocol.
 
 The current release focuses on two areas:
@@ -193,7 +191,7 @@ Default listeners:
 
 eMule sends a global server status request over **UDP** (`OP_GLOBSERVSTATREQ`). After the server replies with `OP_GLOBSERVSTATRES`, the client can refresh **soft file limit**, **hard file limit**, **max users**, and related server-list fields. TCP-only connections often leave those at 0.
 
-- **Port formula**: `UDP port = TCP listen port + udp_port_offset`. The default `udp_port_offset` is **4** (same convention as common eD2k clients, matching aMule’s default `SendUDPPacket` offset).
+- **Port formula**: `UDP port = TCP listen port + udp_port_offset`. The default `udp_port_offset` is **4** (same convention as common eD2k clients, matching aMule's default `SendUDPPacket` offset).
 - **Disable UDP**: set `"server_udp": false` to skip the UDP listener (clients may still show zeros or stale stats).
 - **Firewall / security groups**: if `server_udp` is enabled, open the matching **UDP** port in addition to the ED2K **TCP** port.
 
@@ -218,7 +216,7 @@ docker run -d --name goed2k-server \
 
 `4665:4665/udp` matches default TCP `4661` with `udp_port_offset` `4`. If you change the TCP port in `listen_address`, map **`TCP port + udp_port_offset`** for UDP.
 
-When `storage_backend` is `json`, ensure `catalog_path` refers to a file that exists inside the container—usually by mounting your catalog and pointing `catalog_path` at that path. Example: host files under `/srv/goed2k/`, with `catalog_path` set to `/data/catalog.json`:
+When `storage_backend` is `json`, ensure `catalog_path` refers to a file that exists inside the container, usually by mounting your catalog and pointing `catalog_path` at that path. Example: host files under `/srv/goed2k/`, with `catalog_path` set to `/data/catalog.json`:
 
 ```bash
 docker run -d --name goed2k-server \
@@ -257,7 +255,7 @@ To build and run from source instead of the Hub image, use the `Dockerfile` at t
 | `aux_port` | Auxiliary port returned in `IdChange` |
 | `protocol_obfuscation` | Enable eMule-style TCP obfuscation (DH + RC4) when the first byte is not ED2K |
 | `server_udp` | Enable UDP server status replies (default `true`) |
-| `udp_port_offset` | UDP listen port offset from TCP (default `4`, i.e. TCP `4661` → UDP `4665`) |
+| `udp_port_offset` | UDP listen port offset from TCP (default `4`, i.e. TCP `4661` -> UDP `4665`) |
 | `soft_files_limit` | Soft file limit advertised in the UDP reply (eMule display and publish policy) |
 | `hard_files_limit` | Hard file limit advertised in the UDP reply |
 | `max_users_advertised` | Max users advertised in the UDP reply |
